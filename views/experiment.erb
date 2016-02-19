@@ -1,0 +1,22 @@
+<p>後 <%=@times%>回</p>
+
+
+<audio id="sound" preload="auto" >
+  <source type="audio/wav"src="<%=@sound_file_name%>">
+</audio>
+
+<div id="btns">
+  <input type="button" onclick="audioplay();" value="再生">
+</div>
+
+
+<form action="<%=@times - 1%>" method="GET">
+    どちらが聞こえましたか？
+  <div>
+    <input type="radio" name="user_ans" value="1" checked="checked"><%=%>
+    <input type="radio" name="user_ans" value="2"><%=%>
+  </div>
+  <div>
+    <input type="submit" value="決定">
+  </div>
+</form>
