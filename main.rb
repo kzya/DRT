@@ -35,15 +35,16 @@ end
     @sound_file_name = Public_path + 'fao/' + "#{sound_name}" + '.wav'
 
     # 正答ID
+    @correct_ans = d[1]
     
-    # 混入ID
+    #view表示用解答例
+    @first_candidate_id  = d[2] 
+    @first_candidate     = d[3] 
+    @second_candidate_id = d[4]
+    @second_candidate    = d[5]
 
     #応答ID取得
     @user_ans = request[:user_ans]
-
-    #応答表示
-    
-    #応答時刻
 
     @times = n
     if n == 0

@@ -13,8 +13,10 @@
 <form action="<%=@times - 1%>" method="GET">
     どちらが聞こえましたか？
   <div>
-    <input type="radio" name="user_ans" value="1" checked="checked"><%=%>
-    <input type="radio" name="user_ans" value="2"><%=%>
+      <input type="radio" name="user_ans" value="<%=@first_candidate_id%>" checked="checked">
+      <%=@first_candidate%>
+      <input type="radio" name="user_ans" value="<%=@second_candidate_id%>">
+      <%=@second_candidate%>
   </div>
   <div>
     <input type="submit" value="決定">
