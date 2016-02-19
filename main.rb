@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/reloader'
+load './lib/select_sound_data.rb'
 
 Experiment_times = 10
 Experiment_times.freeze
@@ -18,18 +19,20 @@ post '/sign_in' do
   erb :confirm
 end
 
+#FIXME: グローバル変数辞めたい
+#ホントはうまく保持できそうだが、インスタンス変数だとルーティング毎に
+#変数が変わるため、初回のみインスタンス化したものがうまく共有されない
+before "/experiment/#{Experiment_times}" do
+  $sound_data = SelectSoundData.new('./utils/list.txt')
+  $sound_data.split_data
+end
 
 # Experiment_timesから0までのルーティング作成
 (0..Experiment_times).to_a.reverse.each do |n|
   get "/experiment/#{n}" do
-    # TODO: ランダムで音再生
-
-    # ファイル名
-    # どうせcsvに吐き出すのでフルパスにした
-    # rand_soundには040などの数字が入る
-    # とりま決め打ち
-    rand_sound = "040"
-    @sound_file_name = Public_path + 'fao/' + "#{rand_sound}" + '.wav'
+    d = $sound_data.select_rand
+    sound_name = d[0] 
+    @sound_file_name = Public_path + 'fao/' + "#{sound_name}" + '.wav'
 
     # 正答ID
     
@@ -54,4 +57,3 @@ end
 get '/thanks' do
   "thanks!!!"
 end
-
