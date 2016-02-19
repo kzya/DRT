@@ -1,4 +1,4 @@
-class SelectMusicData
+class SelectSoundData
   def initialize(sound_list_file_path)
     @sound_list_file = sound_list_file_path
     @data = []
