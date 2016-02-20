@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 load './lib/select_sound_data.rb'
+load './lib/ans_logger.rb'
 
 Experiment_times = 10
 Experiment_times.freeze
@@ -16,23 +17,33 @@ post '/sign_in' do
   @name      = params[:name]
   @gender    = params[:gender]
   @age_group = params[:age_group] 
+
+  $logger = AnsLogger.new(@name, @gender, @age_group)
+
   erb :confirm
 end
+
 
 #FIXME: グローバル変数辞めたい
 #ホントはうまく保持できそうだが、インスタンス変数だとルーティング毎に
 #変数が変わるため、初回のみインスタンス化したものがうまく共有されない
+
 before "/experiment/#{Experiment_times}" do
   $sound_data = SelectSoundData.new('./utils/list.txt')
   $sound_data.split_data
 end
+
 
 # Experiment_timesから0までのルーティング作成
 (0..Experiment_times).to_a.reverse.each do |n|
   get "/experiment/#{n}" do
     d = $sound_data.select_rand
     sound_name = d[0] 
-    @sound_file_name = Public_path + 'fao/' + "#{sound_name}" + '.wav'
+    
+    #再生する音源をhtml側に伝えるため
+    #sound_nameはログでも使う
+    sound_name       = 'fao/' + "#{sound_name}" + '.wav'
+    @sound_file_path = Public_path + sound_name
 
     # 正答ID
     @correct_ans = d[1]
@@ -46,6 +57,8 @@ end
     #応答ID取得
     @user_ans = request[:user_ans]
 
+    $logger.write_ans(sound_name, @correct_ans, @user_ans)
+
     @times = n
     if n == 0
       redirect to('/thanks')
@@ -54,6 +67,7 @@ end
     erb :experiment
   end
 end
+
 
 get '/thanks' do
   "thanks!!!"
