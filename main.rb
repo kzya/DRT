@@ -57,7 +57,7 @@ end
     #応答ID取得
     @user_ans = request[:user_ans]
 
-    $logger.write_ans(sound_name, @correct_ans, @user_ans)
+    $logger.write_ans(sound_name, @correct_ans, @user_ans) unless n == Experiment_times
 
     @times = n
     if n == 0
